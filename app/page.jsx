@@ -13,7 +13,6 @@ export default function HomePage() {
             <div className="md:col-span-2">
               <CovidLineChart />
             </div>
-            
           </div>
         </section>
 

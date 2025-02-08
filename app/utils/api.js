@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 
 export const fetchCovidData = async () => {
   try {
-    const response = await fetch('/covid_data.csv');  // Fetch from the public folder
+    const response = await fetch('https://data.gov.sg/api/action/datastore_search?resource_id=d_713e8c4fd88c64a7b7e55e9c2643e936');  // Fetch from the public folder
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
