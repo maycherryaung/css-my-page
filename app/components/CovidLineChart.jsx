@@ -52,7 +52,7 @@ export default function CovidLineChart() {
         </select>
       </div>
 
-      <LineChart width={800} height={500} data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+      <LineChart width={1000} height={500} data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
         <CartesianGrid strokeDasharray="3 3" />
         
         <XAxis

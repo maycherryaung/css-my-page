@@ -54,22 +54,32 @@ export default function HospitalisationChart() {
         </select>
       </div>
 
-      <ResponsiveContainer width="70%" height={500}>
+      <ResponsiveContainer width="100%" height={500}>
         <BarChart width={400} height={400} data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="epi_week" angle={-45} textAnchor="end" interval={0} height={70} />
-          <YAxis domain={[0, 1000]} /> {/* Adjust as per your data */}
+          
+          {/* Dynamically adjust Y-axis */}
+          <YAxis 
+            domain={[
+              0, 
+              (dataMax) => dataMax < 100 ? 100 : dataMax + 50  // Adjust upper limit based on data
+            ]}
+          />
+          
           <Tooltip />
           <Legend />
 
-          {/* Render the selected data */}
+          {/* Increase bar size for better visibility */}
           <Bar
             dataKey={selectedData}
             fill={selectedData === "Hospitalised" ? "#1e90ff" : "#ff4500"}
             name={selectedData === "Hospitalised" ? "Hospitalised" : "ICU Admissions"}
+            barSize={30}  // Make bars thicker
           />
         </BarChart>
-      </ResponsiveContainer>
+</ResponsiveContainer>
+
     </div>
   );
 }
