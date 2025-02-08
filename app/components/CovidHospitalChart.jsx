@@ -36,50 +36,48 @@ export default function HospitalisationChart() {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">COVID-19 Hospitalisations & ICU Admissions by Week</h2>
+      {/* Unified container for heading, dropdown, and paragraph */}
+      <div className="max-w-screen-lg mx-auto">
+        <h2 className="text-2xl font-bold mb-4">COVID-19 Hospitalisations & ICU Admissions by Week</h2>
 
-      {/* Dropdown to select Hospitalised or ICU */}
-      <div className="mb-4">
-        <label htmlFor="hospitalDataSelect" className="block font-medium text-gray-700 mb-2">
-          Select Data to Display:
-        </label>
-        <select
-          id="hospitalDataSelect"
-          className="border border-gray-300 rounded-md p-2 w-full md:w-1/3"
-          value={selectedData}
-          onChange={handleSelectionChange}
-        >
-          <option value="Hospitalised">Hospitalised</option>
-          <option value="ICU">ICU Admissions</option>
-        </select>
+        <div className="mb-4">
+          <label htmlFor="hospitalDataSelect" className="block font-medium text-gray-700 mb-2">
+            Select Data to Display:
+          </label>
+          <select
+            id="hospitalDataSelect"
+            className="border border-gray-300 rounded-md p-2 w-full md:w-1/3"
+            value={selectedData}
+            onChange={handleSelectionChange}
+          >
+            <option value="Hospitalised">Hospitalised</option>
+            <option value="ICU">ICU Admissions</option>
+          </select>
+        </div>
+
+        {/* Make the chart responsive */}
+        <ResponsiveContainer width="100%" height={500}>
+          <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="epi_week" angle={-45} textAnchor="end" interval={0} height={70} />
+            <YAxis domain={[0, (dataMax) => dataMax < 100 ? 100 : dataMax + 50]} />
+            <Tooltip />
+            <Legend />
+            <Bar
+              dataKey={selectedData}
+              fill={selectedData === "Hospitalised" ? "#1e90ff" : "#ff4500"}
+              name={selectedData === "Hospitalised" ? "Hospitalised" : "ICU Admissions"}
+              barSize={30}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+
+        {/* Paragraph aligned with heading and dropdown */}
+        <p className="text-gray-700 mt-4">
+          This graph displays the weekly numbers of hospitalisations and ICU admissions related to COVID-19. It offers insights
+          into the healthcare system's capacity and the severity of cases requiring intensive care.
+        </p>
       </div>
-
-      <ResponsiveContainer width="100%" height={500}>
-        <BarChart width={400} height={400} data={data} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="epi_week" angle={-45} textAnchor="end" interval={0} height={70} />
-          
-          {/* Dynamically adjust Y-axis */}
-          <YAxis 
-            domain={[
-              0, 
-              (dataMax) => dataMax < 100 ? 100 : dataMax + 50  // Adjust upper limit based on data
-            ]}
-          />
-          
-          <Tooltip />
-          <Legend />
-
-          {/* Increase bar size for better visibility */}
-          <Bar
-            dataKey={selectedData}
-            fill={selectedData === "Hospitalised" ? "#1e90ff" : "#ff4500"}
-            name={selectedData === "Hospitalised" ? "Hospitalised" : "ICU Admissions"}
-            barSize={30}  // Make bars thicker
-          />
-        </BarChart>
-</ResponsiveContainer>
-
     </div>
   );
 }
