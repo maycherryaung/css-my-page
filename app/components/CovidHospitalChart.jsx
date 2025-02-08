@@ -57,6 +57,30 @@ export default function HospitalisationChart() {
     setSelectedMonth(e.target.value);
   };
 
+  const getDescription = () => {
+    if (selectedData === "ICU") {
+      return (
+        "The graph illustrates the weekly count of new ICU admissions due to COVID-19 in Singapore from January 2023 to January 2024. " +
+        "The x-axis represents the epidemiological weeks (Epi-weeks), ranging from week 9 of 2023 to week 7 of 2024. " +
+        "The y-axis shows the number of ICU admissions, with counts ranging from 0 to 40.\n" +
+        "Key Observations: There is a noticeable peak between weeks 15 and 21 of 2023, where ICU admissions fluctuated between 10 and 17 cases. " +
+        "A significant spike occurs around week 51 of 2023, reaching over 30 ICU admissions, followed by a gradual decline into early 2024. " +
+        "After week 1 of 2024, the number of ICU admissions steadily decreases, approaching zero by week 7 of 2024. " +
+        "The data is sourced from the Ministry of Health (MOH) and was last updated 8 months ago. A CSV file with the data is available for download."
+      );
+    } else {
+      return (
+        "The graph illustrates the weekly count of new COVID-19 hospitalisations in Singapore from January 2023 to January 2024. " +
+        "The x-axis represents the epidemiological weeks (Epi-weeks), ranging from week 9 of 2023 to week 7 of 2024. " +
+        "The y-axis shows the number of hospitalisations, with counts ranging from 0 to  1250.\n" +
+        "Key Observations: There is a significant peak between weeks 15 and 21 of 2023, where hospitalisations ranged between 500 and 550 cases. " +
+        "Another major spike occurs around week 50 of 2023, reaching close to 950 hospitalisations, followed by a steady decline into early 2024. " +
+        "By week 7 of 2024, the number of hospitalisations drops significantly. " +
+        "The data is sourced from the Ministry of Health (MOH) and was last updated 8 months ago. A CSV file with the data is available for download."
+      );
+    }
+  };
+
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Number of new COVID-19 hospitalisations / ICU admissions by Epi-week</h2>
@@ -110,6 +134,9 @@ export default function HospitalisationChart() {
           />
         </BarChart>
       </ResponsiveContainer>
+      <p className="text-gray-700 mt-4">
+        {getDescription()}
+      </p>
     </div>
   );
 }

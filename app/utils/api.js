@@ -1,34 +1,25 @@
-import Papa from 'papaparse';
-
-export const fetchCovidData = async () => {
+export const fetchVaccinationData = async () => {
   try {
-    const response = await fetch('https://data.gov.sg/api/action/datastore_search?resource_id=d_713e8c4fd88c64a7b7e55e9c2643e936');  // Fetch from the public folder
+    const response = await fetch(
+      "https://data.gov.sg/api/action/datastore_search?resource_id=d_713e8c4fd88c64a7b7e55e9c2643e936"
+    );
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
 
-    const csvText = await response.text();
+    const jsonData = await response.json();
+    const records = jsonData.result.records;
 
-    // Parse CSV using PapaParse
-    const parsedData = Papa.parse(csvText, {
-      header: true,  // Converts CSV headers to object keys
-      skipEmptyLines: true
-    });
-
-    console.log("Parsed CSV Data:", parsedData.data);  // Check the parsed data
-
-    // Map the data into the desired format
-    return parsedData.data.map(item => ({
-      date: item.date_figure,
-      confirmed: parseInt(item.confirmed_total, 10),
-      discharged: parseInt(item.discharge_total, 10),
-      hospitalized: parseInt(item.hospitalised_total, 10)
+    // Map records to desired format
+    return records.map(item => ({
+      date: item.vacc_date, // ISO date (YYYY-MM-DD)
+      received_at_least_one_dose: Number(item.received_at_least_one_dose),
+      full_regimen: Number(item.full_regimen),
+      minimum_protection: Number(item.minimum_protection)
     }));
-    console.log("First Row of Parsed Data:", parsedData.data[0]);
-
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching vaccination data:", error);
     return [];
   }
 };
