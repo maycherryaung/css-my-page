@@ -1,4 +1,4 @@
-"use client";  // This tells Next.js to treat this file as a Client Component
+"use client";  
 
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer } from "recharts";
@@ -68,14 +68,19 @@ export default function HospitalisationChart() {
         "After week 1 of 2024, the number of ICU admissions steadily decreases, approaching zero by week 7 of 2024. " +
         "The data is sourced from the Ministry of Health (MOH) and was last updated 8 months ago. A CSV file with the data is available for download."
       );
-    } else {
+    } else if (selectedData === "Hospitalised") {
       return (
         "The graph illustrates the weekly count of new COVID-19 hospitalisations in Singapore from January 2023 to January 2024. " +
         "The x-axis represents the epidemiological weeks (Epi-weeks), ranging from week 9 of 2023 to week 7 of 2024. " +
-        "The y-axis shows the number of hospitalisations, with counts ranging from 0 to  1250.\n" +
+        "The y-axis shows the number of hospitalisations, with counts ranging from 0 to 1250.\n" +
         "Key Observations: There is a significant peak between weeks 15 and 21 of 2023, where hospitalisations ranged between 500 and 550 cases. " +
         "Another major spike occurs around week 50 of 2023, reaching close to 950 hospitalisations, followed by a steady decline into early 2024. " +
         "By week 7 of 2024, the number of hospitalisations drops significantly. " +
+        "The data is sourced from the Ministry of Health (MOH) and was last updated 8 months ago. A CSV file with the data is available for download."
+      );
+    } else {
+      return (
+        "The graph illustrates the weekly count of new COVID-19 hospitalisations and ICU admissions in Singapore from January 2023 to January 2024. " +
         "The data is sourced from the Ministry of Health (MOH) and was last updated 8 months ago. A CSV file with the data is available for download."
       );
     }
@@ -83,9 +88,11 @@ export default function HospitalisationChart() {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Number of new COVID-19 hospitalisations / ICU admissions by Epi-week</h2>
+      <h2 className="text-2xl font-bold mb-4">
+        Number of new COVID-19 hospitalisations / ICU admissions by Epi-week
+      </h2>
 
-      {/* Dropdown to select Hospitalised or ICU */}
+      {/* Dropdown to select Hospitalised, ICU, or Both */}
       <div className="mb-4">
         <label htmlFor="hospitalDataSelect" className="block font-medium text-gray-700 mb-2">
           Select Data to Display:
@@ -96,6 +103,7 @@ export default function HospitalisationChart() {
           value={selectedData}
           onChange={handleSelectionChange}
         >
+          <option value="both">All</option>
           <option value="Hospitalised">Hospitalised</option>
           <option value="ICU">ICU Admissions</option>
         </select>
@@ -103,7 +111,9 @@ export default function HospitalisationChart() {
 
       {/* Month-based Filter */}
       <div className="mb-4">
-        <label htmlFor="monthFilter" className="block font-medium text-gray-700 mb-2">Filter by Month:</label>
+        <label htmlFor="monthFilter" className="block font-medium text-gray-700 mb-2">
+          Filter by Month:
+        </label>
         <select
           id="monthFilter"
           className="border border-gray-300 rounded-md p-2 w-full md:w-1/3"
@@ -118,20 +128,54 @@ export default function HospitalisationChart() {
       </div>
 
       <ResponsiveContainer width="100%" height={500}>
-        <BarChart width={500} height={400} data={filteredData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+        <BarChart
+          width={500}
+          height={400}
+          data={filteredData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+        >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="epi_week" angle={-45} textAnchor="end" interval={0} height={70} tick={{ fill: '#6b7280' }} />
-          <YAxis tick={{ fill: '#6b7280' }} label={{ value: 'Count', angle: -90, position: 'insideLeft', fill: '#6b7280' }} />
+          <XAxis
+            dataKey="epi_week"
+            angle={-45}
+            textAnchor="end"
+            interval={0}
+            height={70}
+            tick={{ fill: '#6b7280' }}
+          />
+          <YAxis
+            tick={{ fill: '#6b7280' }}
+            label={{ value: 'Count', angle: -90, position: 'insideLeft', fill: '#6b7280' }}
+          />
           <Tooltip contentStyle={{ backgroundColor: '#f9fafb', borderColor: '#d1d5db' }} />
           <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: '10px' }} />
 
-          <Bar
-            dataKey={selectedData}
-            fill={selectedData === "Hospitalised" ? "#D18700" : "#6a0dad"}
-            name={selectedData === "Hospitalised" ? "Hospitalised" : "ICU Admissions"}
-            barSize={20}
-            radius={[4, 4, 0, 0]}
-          />
+          {selectedData === "both" ? (
+            <>
+              <Bar
+                dataKey="Hospitalised"
+                fill="#D18700"
+                name="Hospitalised"
+                barSize={20}
+                radius={[4, 4, 0, 0]}
+              />
+              <Bar
+                dataKey="ICU"
+                fill="#6a0dad"
+                name="ICU Admissions"
+                barSize={20}
+                radius={[4, 4, 0, 0]}
+              />
+            </>
+          ) : (
+            <Bar
+              dataKey={selectedData}
+              fill={selectedData === "Hospitalised" ? "#D18700" : "#6a0dad"}
+              name={selectedData === "Hospitalised" ? "Hospitalised" : "ICU Admissions"}
+              barSize={20}
+              radius={[4, 4, 0, 0]}
+            />
+          )}
         </BarChart>
       </ResponsiveContainer>
       <p className="text-gray-700 mt-4">
